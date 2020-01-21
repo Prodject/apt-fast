@@ -3,7 +3,7 @@ apt-fast v1.9
 Use this just like aptitude or apt-get for faster package downloading.
 
 Copyright: 2008-2012 Matt Parnell, http://www.mattparnell.com
-Improvements, maintenance, revisions - 2012, 2017-2018 Dominique Lasserre
+Improvements, maintenance, revisions - 2012, 2017-2019 Dominique Lasserre
 
 You may distribute this file under the terms of the GNU General
 Public License as published by the Free Software Foundation; either
@@ -18,11 +18,14 @@ apt-fast is a shellscript wrapper for apt-get and aptitude that can drastically 
 
 - [Installation](#installation)
   - [Ubuntu PPA](#ubuntu-ppa)
-  - [Quick Install](#quick-install)
+  - [Debian and derivates](#debian-and-derivates)
+  - [Interaction-free installation](#interaction-free-installation)
+  - [Quick install](#quick-install)
   - [Manual](#manual)
   - [Autocompletion](#autocompletion)
     - [Bash](#bash)
     - [Zsh](#zsh)
+    - [Fish](#fish)
   - [Man page installation](#man-page-installation)
 - [Configuration](#configuration)
   - [Package manager](#package-manager)
@@ -57,9 +60,42 @@ You can use the Ubuntu PPA to get a graphical configuration file setup and autom
 
 * [ppa:apt-fast/stable](https://code.launchpad.net/~apt-fast/+archive/stable)
 
-Some distros, such as PCLinuxOS include apt-fast in their repos.
 
-### Quick Install ###
+### Debian and derivates ###
+Some distros, such as PCLinuxOS include apt-fast in their repositories. However if not included like in Debian or Kali Linux, then the PPA can be manually added by creating a new file `/etc/apt/sources.list.d/apt-fast.list`:
+
+```
+deb http://ppa.launchpad.net/apt-fast/stable/ubuntu bionic main 
+deb-src http://ppa.launchpad.net/apt-fast/stable/ubuntu bionic main
+```
+
+To install apt-fast execute following commands as root:
+```bash
+apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A2166B8DE8BDC3367D1901C11EE2FF37CA8DA16B
+apt-get update
+apt-get install apt-fast
+```
+
+Note that the PPA version ``bionic`` might need to be updated with the recent Ubuntu LTS codename to stay up-to-date.
+
+
+### Interaction-free installation ###
+To install apt-fast without interaction execute the following commands as root after adding the package sources to the sources.list:
+
+```bash
+DEBIAN_FRONTEND=noninteractive apt-get install -y apt-fast
+```
+
+To update specific configuration values use the debconf command line interface as root, e.g.:
+
+```bash
+echo debconf apt-fast/maxdownloads string 16 | debconf-set-selections
+echo debconf apt-fast/dlflag boolean true | debconf-set-selections
+echo debconf apt-fast/aptmanager string apt-get | debconf-set-selections
+```
+
+
+### Quick install ###
 You can quickly install `apt-fast` by running:
 
 ```bash
@@ -99,6 +135,14 @@ chown root:root /etc/bash_completion.d/apt-fast
 cp completions/zsh/_apt-fast /usr/share/zsh/functions/Completion/Debian/
 chown root:root /usr/share/zsh/functions/Completion/Debian/_apt-fast
 source /usr/share/zsh/functions/Completion/Debian/_apt-fast
+```
+
+#### Fish ####
+
+```fish
+cp completions/fish/apt-fast.fish /etc/fish/conf.d/completions/
+chown root:root /etc/fish/conf.d/completions/apt-fast.fish
+source /etc/fish/conf.d/completions/apt-fast.fish
 ```
 
 ### Man page installation ###
@@ -205,9 +249,9 @@ apt-fast uses APT's proxy settings (`Acquire::http::proxy`, `Acquire::https::pro
 
 ### Download folder ###
 ```sh
-DLDIR='/var/cache/apt/archives/apt-fast'
+DLDIR='/var/cache/apt/apt-fast'
 ```
-Directory where apt-fast downloads the packages.
+Directory where apt-fast (temporarily) downloads the packages.
 
 
 ### APT archives cache ###
@@ -240,7 +284,7 @@ Consider apt-fast and all of its derivatives licensed under the GNU GPLv3+.
 
 Copyright: 2008-2012 Matt Parnell, http://www.mattparnell.com
 
-Improvements, maintenance, revisions - 2012, 2017-2018 Dominique Lasserre
+Improvements, maintenance, revisions - 2012, 2017-2019 Dominique Lasserre
 
 
 Special thanks
